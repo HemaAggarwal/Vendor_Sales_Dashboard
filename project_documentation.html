@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Sales Performance Dashboard – Project Documentation</title>
+<style>
+  body {font-family:Arial,sans-serif;max-width:1000px;margin:0 auto;padding:24px;color:#1a1a1a;line-height:1.65}
+  h1 {color:#0D47A1;border-bottom:3px solid #0D47A1;padding-bottom:8px;font-size:2em}
+  h2 {color:#1565C0;border-left:5px solid #1565C0;padding-left:12px;margin-top:36px}
+  h3 {color:#1976D2;margin-top:24px}
+  pre {background:#1e1e2e;color:#cdd6f4;padding:16px;border-radius:8px;overflow-x:auto;font-family:Consolas,monospace;font-size:0.88em}
+  code {background:#e8f4f8;color:#0D47A1;padding:2px 6px;border-radius:4px;font-family:Consolas,monospace;font-size:0.9em}
+  pre code {background:none;color:inherit;padding:0}
+  table {border-collapse:collapse;width:100%;margin:16px 0;font-size:0.93em}
+  th {background:#1565C0;color:white;padding:8px 12px;text-align:left}
+  td {padding:7px 12px;border:1px solid #dee2e6}
+  tr:nth-child(even) td {background:#f0f7ff}
+  hr {border:none;border-top:2px solid #e0e0e0;margin:32px 0}
+  p {margin:10px 0}
+  ul,ol {margin:10px 0;padding-left:24px}
+  li {margin:4px 0}
+  strong {color:#0D47A1}
+  .toc {background:#f0f7ff;border-left:4px solid #1565C0;padding:16px 24px;border-radius:4px;margin:16px 0}
+  @media print {body{padding:0} h2{break-before:page}.no-break{break-inside:avoid}}
+</style>
+</head>
+<body>
+<h1>Vendor Sales Performance Dashboard</h1>
+<h3>Final Year Project | Excel · Python · SQL · Power BI</h3>
+<hr>
+<h2>📋 TABLE OF CONTENTS</h2>
+1. Abstract
+2. Introduction
+3. Problem Statement
+4. Dataset Description
+5. SQL Queries (with Explanations)
+6. Python Analysis (Complete Code)
+7. Excel Dashboard Guide
+8. Power BI Dashboard Guide
+9. Business Insights
+10. Conclusion
+11. Methodology
+12. Tools Used
+13. Future Scope
+14. Viva Questions & Answers
+<hr>
+<h2>1. ABSTRACT</h2>
+<p>This project presents a <strong>Vendor Sales Performance Dashboard</strong> built using four industry-standard tools: Microsoft Excel, Python, SQL, and Power BI. The objective is to analyze sales data from 10 vendors across 5 regions and 8 product categories over a two-year period (2023–2024), covering 550+ transactions worth over ₹12 crore in total revenue. The project follows a complete data pipeline — from raw data generation and cleaning (Python/Pandas), through structured querying (SQL), to interactive visualization (Excel and Power BI). Key performance indicators including total sales, profit margins, discount patterns, regional distribution, and monthly trends are explored. The dashboard enables business stakeholders to quickly identify top-performing vendors, underperforming regions, and high-margin product categories. This project demonstrates practical data analytics skills applicable to real-world business intelligence roles and internship positions.</p>
+<hr>
+<h2>2. INTRODUCTION</h2>
+<p>In today's competitive business environment, companies work with dozens of vendors simultaneously. Manually tracking which vendor performs best, which region generates the most revenue, and how sales trend over time is nearly impossible without data tools. This is where <strong>Business Intelligence (BI) Dashboards</strong> come in.</p>
+<p>This project simulates a real company's vendor management scenario. We have 10 vendors selling 8 types of products across 5 geographic regions. Each sale is recorded with details like discount given, quantity sold, profit earned, and the date of the order. By analyzing this data using Python for cleaning and exploration, SQL for structured querying, Excel for quick pivots and charts, and Power BI for an interactive executive dashboard, we create a complete 360-degree view of vendor performance.</p>
+<p>The project is designed to be beginner-friendly yet professionally structured, following the same workflow used by data analysts in companies like Amazon, Flipkart, and large retail chains. By the end, you will have a portfolio-ready project that demonstrates your ability to handle the full data analytics lifecycle.</p>
+<hr>
+<h2>3. PROBLEM STATEMENT</h2>
+<h3>Business Context</h3>
+A mid-sized trading company works with 10 vendors across North, South, East, West, and Central India. The company sells 8 product categories. The management team struggles to answer:
+- Which vendor generates the most revenue?
+- Which region is underperforming and why?
+- Are high discounts hurting profit margins?
+- Which months have peak sales vs. slow periods?
+- Which product categories are most profitable?
+<h3>Why This Dashboard is Needed</h3>
+Without a dashboard, managers spend hours in spreadsheets, making decisions based on gut feeling rather than data. A well-designed dashboard provides:
+- <strong>Instant visibility</strong> into KPIs (Total Sales, Profit, Top Vendor)
+- <strong>Data-driven decisions</strong> for vendor negotiations and regional strategy
+- <strong>Early warning signals</strong> when sales dip or margins shrink
+- <strong>Time savings</strong> — from hours of manual analysis to seconds of insight
+<hr>
+<h2>4. DATASET DESCRIPTION</h2>
+<h3>File: <code>vendor_sales_data.csv</code></h3>
+<strong>Total Rows:</strong> 550 | <strong>Columns:</strong> 11 (+ 3 derived)
+<table border="1" style="border-collapse:collapse;width:100%"><tr><th style="padding:6px 10px">Column</th><th style="padding:6px 10px">Data Type</th><th style="padding:6px 10px">Description</th></tr><tr><td style="padding:6px 10px">Order_ID</td><td style="padding:6px 10px">String</td><td style="padding:6px 10px">Unique order identifier (ORD1000–ORD1549)</td></tr><tr><td style="padding:6px 10px">Vendor_ID</td><td style="padding:6px 10px">String</td><td style="padding:6px 10px">Vendor code (V001–V010)</td></tr><tr><td style="padding:6px 10px">Vendor_Name</td><td style="padding:6px 10px">String</td><td style="padding:6px 10px">Full vendor name</td></tr><tr><td style="padding:6px 10px">Region</td><td style="padding:6px 10px">String</td><td style="padding:6px 10px">Geographic region (North/South/East/West/Central)</td></tr><tr><td style="padding:6px 10px">Product_Category</td><td style="padding:6px 10px">String</td><td style="padding:6px 10px">Category of product sold</td></tr><tr><td style="padding:6px 10px">Quantity</td><td style="padding:6px 10px">Integer</td><td style="padding:6px 10px">Units sold per order</td></tr><tr><td style="padding:6px 10px">Unit_Price</td><td style="padding:6px 10px">Float</td><td style="padding:6px 10px">Price per unit in ₹</td></tr><tr><td style="padding:6px 10px">Discount</td><td style="padding:6px 10px">Float</td><td style="padding:6px 10px">Discount rate (0.00 to 0.35) — has ~3% missing values</td></tr><tr><td style="padding:6px 10px">Sales_Amount</td><td style="padding:6px 10px">Float</td><td style="padding:6px 10px">Net revenue = Qty × Price × (1–Discount)</td></tr><tr><td style="padding:6px 10px">Profit</td><td style="padding:6px 10px">Float</td><td style="padding:6px 10px">Profit earned — has ~3% missing values</td></tr><tr><td style="padding:6px 10px">Order_Date</td><td style="padding:6px 10px">Date</td><td style="padding:6px 10px">Date of order (Jan 2023 – Dec 2024)</td></tr></table>
+<strong>Vendors (10):</strong> TechSupply Co., GlobalMart Inc., QuickShip Ltd., Prime Vendors, EagleSource, NovaTrade, BlueStar Supplies, Apex Distributors, SilverLine Corp., RedRock Traders
+<p><strong>Regions (5):</strong> North, South, East, West, Central</p>
+<p><strong>Product Categories (8):</strong> Electronics, Clothing, Furniture, Food & Beverage, Sports, Stationery, Home Appliances, Toys</p>
+<p><strong>Intentional Data Quality Issues (for realistic cleaning):</strong>
+- ~18 rows with missing Discount values
+- ~17 rows with missing Profit values</p>
+<hr>
+<h2>5. SQL QUERIES</h2>
+<p>> <strong>Setup:</strong> Create a table called <code>vendor_sales</code> and import the CSV. All queries work in MySQL, SQL Server, and PostgreSQL (minor syntax differences noted).</p>
+<hr>
+<h3>Query 1: Total Sales by Vendor</h3>
+<pre><code class="lang-sql">SELECT 
+    Vendor_Name,
+    SUM(Sales_Amount) AS Total_Sales,
+    SUM(Profit)       AS Total_Profit,
+    COUNT(Order_ID)   AS Order_Count,
+    ROUND(SUM(Profit)/SUM(Sales_Amount)*100, 2) AS Profit_Margin_Pct
+FROM vendor_sales
+GROUP BY Vendor_Name
+ORDER BY Total_Sales DESC;
+</code></pre>
+<strong>Explanation:</strong> <code>GROUP BY Vendor_Name</code> collapses all rows for each vendor into one summary row. <code>SUM()</code> adds up all their sales. <code>ORDER BY Total_Sales DESC</code> puts the highest seller at the top. This is the most fundamental vendor analysis query.
+<hr>
+<h3>Query 2: Top 5 Performing Vendors</h3>
+<pre><code class="lang-sql">SELECT TOP 5
+    Vendor_Name,
+    SUM(Sales_Amount)  AS Total_Sales,
+    ROUND(SUM(Profit)/SUM(Sales_Amount)*100, 2) AS Profit_Margin_Pct
+FROM vendor_sales
+GROUP BY Vendor_Name
+ORDER BY Total_Sales DESC;
+-- MySQL/PostgreSQL: Use LIMIT 5 instead of TOP 5
+</code></pre>
+<strong>Explanation:</strong> <code>TOP 5</code> (SQL Server) or <code>LIMIT 5</code> (MySQL) restricts output to the highest 5 results. This query is useful in executive reports where only the elite performers are shown.
+<hr>
+<h3>Query 3: Monthly Sales Trend</h3>
+<pre><code class="lang-sql">SELECT 
+    FORMAT(Order_Date, 'yyyy-MM')  AS Month,
+    SUM(Sales_Amount)              AS Monthly_Sales,
+    SUM(Profit)                    AS Monthly_Profit,
+    COUNT(Order_ID)                AS Orders
+FROM vendor_sales
+GROUP BY FORMAT(Order_Date, 'yyyy-MM')
+ORDER BY Month;
+-- MySQL: DATE_FORMAT(Order_Date, '%Y-%m')
+-- PostgreSQL: TO_CHAR(Order_Date, 'YYYY-MM')
+</code></pre>
+<strong>Explanation:</strong> <code>FORMAT()</code> extracts year and month from the date, grouping all orders in the same month together. This reveals seasonal patterns — for example, sales may spike in October–December due to festive season demand.
+<hr>
+<h3>Query 4: Region-wise Performance</h3>
+<pre><code class="lang-sql">SELECT 
+    Region,
+    COUNT(Order_ID)        AS Total_Orders,
+    SUM(Sales_Amount)      AS Total_Sales,
+    ROUND(AVG(Discount)*100, 2) AS Avg_Discount_Pct,
+    SUM(Profit)            AS Total_Profit,
+    ROUND(SUM(Profit)/SUM(Sales_Amount)*100, 2) AS Profit_Margin_Pct
+FROM vendor_sales
+GROUP BY Region
+ORDER BY Total_Sales DESC;
+</code></pre>
+<strong>Explanation:</strong> Groups data by geographic region. The <code>AVG(Discount)</code> tells whether a region is getting higher discounts (which reduces profit). This helps the sales team prioritize regions and negotiate vendor terms geographically.
+<hr>
+<h3>Query 5: Category Profitability Analysis</h3>
+<pre><code class="lang-sql">SELECT 
+    Product_Category,
+    SUM(Sales_Amount)      AS Total_Sales,
+    SUM(Profit)            AS Total_Profit,
+    ROUND(AVG(Discount)*100, 2)     AS Avg_Disc_Pct,
+    ROUND(SUM(Profit)/SUM(Sales_Amount)*100, 2) AS Margin_Pct
+FROM vendor_sales
+GROUP BY Product_Category
+ORDER BY Margin_Pct DESC;
+</code></pre>
+<strong>Explanation:</strong> Finds which product categories have the best profit margins. A category with high sales but low margin (due to large discounts) may need pricing revision.
+<hr>
+<h3>Query 6: Year-over-Year Comparison</h3>
+<pre><code class="lang-sql">SELECT 
+    YEAR(Order_Date)   AS Year,
+    SUM(Sales_Amount)  AS Total_Sales,
+    SUM(Profit)        AS Total_Profit,
+    COUNT(Order_ID)    AS Orders
+FROM vendor_sales
+GROUP BY YEAR(Order_Date)
+ORDER BY Year;
+</code></pre>
+<strong>Explanation:</strong> Compares 2023 vs 2024 performance at a glance. A simple but powerful query that answers the most important business question: "Are we growing?"
+<hr>
+<h2>6. PYTHON ANALYSIS — COMPLETE CODE</h2>
+<p>> <strong>Libraries Required:</strong> <code>pip install pandas numpy matplotlib seaborn</code></p>
+<pre><code class="lang-python"><h1>============================================================</h1>
+<h1>VENDOR SALES PERFORMANCE – Complete Python Analysis</h1>
+<h1>File: vendor_analysis.py</h1>
+<h1>============================================================</h1>
+<p>import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')</p>
+<h1>── CONFIGURATION ────────────────────────────────────────────</h1>
+sns.set_theme(style="whitegrid", palette="muted")
+plt.rcParams.update({"figure.dpi": 150, "font.family": "sans-serif"})
+COLORS = ["#2196F3","#FF5722","#4CAF50","#9C27B0","#FF9800",
+          "#00BCD4","#E91E63","#8BC34A","#795548","#607D8B"]
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 1: LOAD DATA</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+df = pd.read_csv("vendor_sales_data.csv", parse_dates=["Order_Date"])
+<p>print("=== DATASET INFO ===")
+print(f"Rows: {len(df)}, Columns: {len(df.columns)}")
+print(df.dtypes)
+print("\nFirst 5 rows:")
+print(df.head())</p>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 2: DATA QUALITY CHECK</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+print("\n=== MISSING VALUES ===")
+print(df.isnull().sum())
+<p>print("\n=== DUPLICATE ROWS ===")
+print(f"Duplicates: {df.duplicated().sum()}")</p>
+<p>print("\n=== BASIC STATISTICS ===")
+print(df[["Sales_Amount", "Profit", "Discount", "Quantity"]].describe())</p>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 3: DATA CLEANING</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>Strategy 1: Fill missing Discount with median</h1>
+<h1>Why median? It's robust to outliers unlike mean.</h1>
+median_discount = df["Discount"].median()
+df["Discount"].fillna(median_discount, inplace=True)
+print(f"\nFilled missing Discount with median: {median_discount:.2f}")
+<h1>Strategy 2: Fill missing Profit using avg profit margin</h1>
+<h1>This preserves the relationship between Sales and Profit</h1>
+avg_margin = (df["Profit"] / df["Sales_Amount"]).dropna().median()
+df["Profit"].fillna(df["Sales_Amount"] * avg_margin, inplace=True)
+print(f"Filled missing Profit using avg margin: {avg_margin:.2%}")
+<h1>Verify no missing values remain</h1>
+print("\nMissing values after cleaning:")
+print(df.isnull().sum())
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 4: FEATURE ENGINEERING</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+df["Month"]         = df["Order_Date"].dt.to_period("M").astype(str)
+df["Year"]          = df["Order_Date"].dt.year
+df["Quarter"]       = df["Order_Date"].dt.to_period("Q").astype(str)
+df["Profit_Margin"] = (df["Profit"] / df["Sales_Amount"] * 100).round(2)
+df["Month_Num"]     = df["Order_Date"].dt.month
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 5: KPI SUMMARY</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+total_sales   = df["Sales_Amount"].sum()
+total_profit  = df["Profit"].sum()
+total_orders  = df["Order_ID"].nunique()
+avg_discount  = df["Discount"].mean() * 100
+profit_margin = total_profit / total_sales * 100
+top_vendor    = df.groupby("Vendor_Name")["Sales_Amount"].sum().idxmax()
+best_region   = df.groupby("Region")["Sales_Amount"].sum().idxmax()
+best_category = df.groupby("Product_Category")["Profit"].sum().idxmax()
+<p>print(f"\n{'='*55}")
+print(f"  BUSINESS KPI SUMMARY")
+print(f"{'='*55}")
+print(f"  Total Sales       : ₹{total_sales:>15,.2f}")
+print(f"  Total Profit      : ₹{total_profit:>15,.2f}")
+print(f"  Profit Margin     :  {profit_margin:>14.2f}%")
+print(f"  Total Orders      :  {total_orders:>14,}")
+print(f"  Avg Discount      :  {avg_discount:>14.1f}%")
+print(f"  Top Vendor        :  {top_vendor}")
+print(f"  Best Region       :  {best_region}")
+print(f"  Best Category     :  {best_category}")
+print(f"{'='*55}")</p>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 6: AGGREGATIONS</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>Vendor-level summary</h1>
+vendor_summary = (
+    df.groupby("Vendor_Name")
+    .agg(
+        Total_Sales   = ("Sales_Amount", "sum"),
+        Total_Profit  = ("Profit",       "sum"),
+        Orders        = ("Order_ID",     "count"),
+        Avg_Discount  = ("Discount",     "mean"),
+    )
+    .assign(Profit_Margin=lambda x: (x.Total_Profit/x.Total_Sales*100).round(2),
+            Sales_Share=lambda x: (x.Total_Sales/x.Total_Sales.sum()*100).round(2))
+    .sort_values("Total_Sales", ascending=False)
+    .reset_index()
+)
+print("\nVendor Summary:\n", vendor_summary.to_string(index=False))
+<h1>Region summary</h1>
+region_summary = (
+    df.groupby("Region")
+    .agg(Total_Sales=("Sales_Amount","sum"),
+         Total_Profit=("Profit","sum"),
+         Orders=("Order_ID","count"))
+    .sort_values("Total_Sales", ascending=False)
+    .reset_index()
+)
+<h1>Monthly trend</h1>
+monthly_trend = (
+    df.groupby("Month")
+    .agg(Sales=("Sales_Amount","sum"), Profit=("Profit","sum"))
+    .reset_index()
+    .sort_values("Month")
+)
+<h1>Category analysis</h1>
+category_analysis = (
+    df.groupby("Product_Category")
+    .agg(Total_Sales=("Sales_Amount","sum"),
+         Total_Profit=("Profit","sum"),
+         Avg_Discount=("Discount","mean"))
+    .assign(Margin=lambda x: (x.Total_Profit/x.Total_Sales*100).round(2))
+    .sort_values("Total_Sales", ascending=False)
+    .reset_index()
+)
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>STEP 7: VISUALIZATIONS</h1>
+<h1>════════════════════════════════════════════════════════════</h1>
+<h1>── Figure 1: Overview Dashboard ────────────────────────────</h1>
+fig, axes = plt.subplots(2, 2, figsize=(16, 11))
+fig.suptitle("Vendor Sales Performance – Overview Dashboard",
+             fontsize=16, fontweight="bold")
+<h1>Plot 1: Top Vendors Bar Chart</h1>
+ax = axes[0, 0]
+v10 = vendor_summary.head(10)
+ax.barh(v10["Vendor_Name"][::-1], v10["Total_Sales"][::-1]/1e6, color=COLORS[:10])
+ax.set_xlabel("Total Sales (₹ Millions)")
+ax.set_title("Vendors Ranked by Total Sales", fontweight="bold")
+<h1>Plot 2: Region Pie Chart</h1>
+ax = axes[0, 1]
+ax.pie(region_summary["Total_Sales"],
+       labels=region_summary["Region"],
+       autopct="%1.1f%%", colors=COLORS[:5],
+       startangle=140, wedgeprops=dict(edgecolor="white", linewidth=1.5))
+ax.set_title("Region-wise Sales Distribution", fontweight="bold")
+<h1>Plot 3: Monthly Sales Trend Line Chart</h1>
+ax = axes[1, 0]
+ax.plot(range(len(monthly_trend)), monthly_trend["Sales"]/1e6,
+        marker="o", linewidth=2, color="#2196F3", markersize=4)
+ax.fill_between(range(len(monthly_trend)), monthly_trend["Sales"]/1e6,
+                alpha=0.15, color="#2196F3")
+step = max(1, len(monthly_trend)//8)
+ax.set_xticks(range(0, len(monthly_trend), step))
+ax.set_xticklabels(monthly_trend["Month"].iloc[::step], rotation=45, ha="right")
+ax.set_ylabel("Sales (₹ Millions)")
+ax.set_title("Monthly Sales Trend (2023–2024)", fontweight="bold")
+<h1>Plot 4: Category Sales Bar Chart</h1>
+ax = axes[1, 1]
+cat_s = category_analysis.sort_values("Total_Sales")
+ax.barh(cat_s["Product_Category"], cat_s["Total_Sales"]/1e6, color=COLORS[:len(cat_s)])
+ax.set_xlabel("Total Sales (₹ Millions)")
+ax.set_title("Sales by Product Category", fontweight="bold")
+<p>plt.tight_layout()
+plt.savefig("fig1_overview.png", bbox_inches="tight", dpi=150)
+plt.show()
+print("Figure 1 saved.")</p>
+<h1>── Figure 2: Profit Analysis ────────────────────────────────</h1>
+fig2, axes2 = plt.subplots(2, 2, figsize=(16, 11))
+fig2.suptitle("Profit & Discount Analysis", fontsize=16, fontweight="bold")
+<h1>Scatter: Sales vs Profit (colored by Discount)</h1>
+ax = axes2[0, 0]
+sc = ax.scatter(df["Sales_Amount"]/1e3, df["Profit"]/1e3,
+                c=df["Discount"], cmap="RdYlGn_r", alpha=0.6, s=20)
+plt.colorbar(sc, ax=ax, label="Discount Rate")
+ax.set_xlabel("Sales Amount (₹ '000)")
+ax.set_ylabel("Profit (₹ '000)")
+ax.set_title("Sales vs Profit (Color = Discount Level)", fontweight="bold")
+<h1>Histogram: Discount Distribution</h1>
+ax = axes2[0, 1]
+ax.hist(df["Discount"]*100, bins=20, color="#FF5722", edgecolor="white", alpha=0.8)
+ax.axvline(df["Discount"].mean()*100, color="navy", linestyle="--",
+           label=f"Mean: {df['Discount'].mean()*100:.1f}%")
+ax.set_xlabel("Discount (%)"); ax.set_ylabel("Frequency")
+ax.set_title("Discount Distribution", fontweight="bold")
+ax.legend()
+<h1>Bar: Vendor Profit Margin</h1>
+ax = axes2[1, 0]
+vm = vendor_summary.sort_values("Profit_Margin")
+colors_m = ["#4CAF50" if x>=22 else "#FF9800" if x>=18 else "#F44336"
+            for x in vm["Profit_Margin"]]
+ax.barh(vm["Vendor_Name"], vm["Profit_Margin"], color=colors_m)
+ax.axvline(vendor_summary["Profit_Margin"].mean(), color="navy",
+           linestyle="--", label=f"Avg: {vendor_summary['Profit_Margin'].mean():.1f}%")
+ax.set_xlabel("Profit Margin (%)"); ax.set_title("Profit Margin by Vendor", fontweight="bold")
+ax.legend(fontsize=8)
+<h1>Grouped Bar: Category Sales vs Profit</h1>
+ax = axes2[1, 1]
+x = np.arange(len(category_analysis)); w = 0.35
+ax.bar(x-w/2, category_analysis["Total_Sales"]/1e6, w, label="Sales",  color="#2196F3", alpha=0.85)
+ax.bar(x+w/2, category_analysis["Total_Profit"]/1e6,w, label="Profit", color="#4CAF50", alpha=0.85)
+ax.set_xticks(x)
+ax.set_xticklabels(category_analysis["Product_Category"], rotation=40, ha="right", fontsize=8)
+ax.set_ylabel("₹ Millions")
+ax.set_title("Sales vs Profit by Category", fontweight="bold")
+ax.legend()
+<p>plt.tight_layout()
+plt.savefig("fig2_profit.png", bbox_inches="tight", dpi=150)
+plt.show()
+print("Figure 2 saved.")</p>
+<h1>── Figure 3: Advanced Insights ──────────────────────────────</h1>
+fig3, axes3 = plt.subplots(2, 2, figsize=(16, 11))
+fig3.suptitle("Advanced Analytics & Insights", fontsize=16, fontweight="bold")
+<h1>Year-over-Year comparison</h1>
+ax = axes3[0, 0]
+for yr, col in zip([2023, 2024], ["#2196F3", "#FF5722"]):
+    yd = df[df["Year"]==yr].groupby(df["Order_Date"].dt.month)["Sales_Amount"].sum()/1e6
+    ax.plot(yd.index, yd.values, marker="o", label=str(yr), color=col, linewidth=2)
+ax.set_xticks(range(1,13))
+ax.set_xticklabels(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
+ax.set_ylabel("Sales (₹ Millions)"); ax.set_title("Year-over-Year Monthly Comparison", fontweight="bold")
+ax.legend()
+<h1>Region × Category Heatmap</h1>
+ax = axes3[0, 1]
+heat = df.pivot_table(values="Sales_Amount", index="Region",
+                      columns="Product_Category", aggfunc="sum", fill_value=0)/1e6
+sns.heatmap(heat, ax=ax, cmap="Blues", annot=True, fmt=".1f",
+            linewidths=0.5, cbar_kws={"label": "Sales (₹M)"})
+ax.set_title("Region × Category Sales Heatmap (₹M)", fontweight="bold")
+ax.tick_params(axis='x', rotation=40)
+<h1>Top 5 Vendors Quarterly</h1>
+ax = axes3[1, 0]
+top5 = vendor_summary.head(5)["Vendor_Name"].tolist()
+qv = (df[df["Vendor_Name"].isin(top5)]
+      .groupby(["Quarter","Vendor_Name"])["Sales_Amount"].sum()/1e6
+      .unstack(fill_value=0))
+qv.plot(kind="bar", ax=ax, color=COLORS[:5], alpha=0.9, width=0.8)
+ax.set_xlabel(""); ax.set_ylabel("Sales (₹M)")
+ax.set_title("Top 5 Vendors – Quarterly Performance", fontweight="bold")
+ax.legend(fontsize=7); ax.tick_params(axis='x', rotation=30)
+<h1>Order Count Donut Chart</h1>
+ax = axes3[1, 1]
+reg_orders = df.groupby("Region")["Order_ID"].count()
+ax.pie(reg_orders, labels=reg_orders.index, autopct="%1.1f%%",
+       colors=COLORS[:5], startangle=90, pctdistance=0.8,
+       wedgeprops=dict(width=0.6, edgecolor="white"))
+ax.set_title("Order Count by Region (Donut)", fontweight="bold")
+<p>plt.tight_layout()
+plt.savefig("fig3_advanced.png", bbox_inches="tight", dpi=150)
+plt.show()
+print("Figure 3 saved.")
+print("\n✅ All analysis complete!")
+</code></pre></p>
+<hr>
+<h2>7. EXCEL DASHBOARD — STEP-BY-STEP GUIDE</h2>
+<p>The provided Excel file (<code>vendor_sales_dashboard.xlsx</code>) has <strong>5 sheets</strong>:</p>
+<table border="1" style="border-collapse:collapse;width:100%"><tr><th style="padding:6px 10px">Sheet</th><th style="padding:6px 10px">Contents</th></tr><tr><td style="padding:6px 10px">Raw_Data</td><td style="padding:6px 10px">All 550 rows — the source data</td></tr><tr><td style="padding:6px 10px">Vendor_Summary</td><td style="padding:6px 10px">Pivot table + bar chart for vendor comparison</td></tr><tr><td style="padding:6px 10px">Region_Category</td><td style="padding:6px 10px">Region & category pivot tables + charts</td></tr><tr><td style="padding:6px 10px">Monthly_Trend</td><td style="padding:6px 10px">Month-by-month sales line chart</td></tr><tr><td style="padding:6px 10px">SQL_Reference</td><td style="padding:6px 10px">All SQL queries for quick reference</td></tr></table>
+<h3>How to Explore the Excel Dashboard</h3>
+<p><strong>Step 1 — Open the file</strong>
+Open <code>vendor_sales_dashboard.xlsx</code>. You will land on the <code>Raw_Data</code> sheet. Row 1 is frozen as a header.</p>
+<p><strong>Step 2 — Apply your own AutoFilter</strong>
+- Click any cell in Row 1 → Data tab → Filter
+- You can now filter by Region, Vendor, Category, or Year</p>
+<p><strong>Step 3 — View Vendor Rankings</strong>
+- Click the <code>Vendor_Summary</code> sheet
+- See the pivot-style table with Total Sales, Profit, Orders, and Profit Margin %
+- Column G shows each vendor's <strong>Sales Share %</strong> calculated with a live formula</p>
+<p><strong>Step 4 — Explore Charts</strong>
+- <code>Vendor_Summary</code>: Horizontal bar chart comparing all vendors
+- <code>Region_Category</code>: Pie chart (region) + bar chart (category)
+- <code>Monthly_Trend</code>: Line chart showing every month's sales + MoM change %</p>
+<p><strong>Step 5 — Create Your Own Pivot Table (Practice)</strong>
+1. Click on <code>Raw_Data</code> sheet
+2. Select any cell → Insert → PivotTable → New Worksheet
+3. Drag <code>Vendor_Name</code> to Rows
+4. Drag <code>Sales_Amount</code> to Values (set to Sum)
+5. Drag <code>Region</code> to Columns
+6. You now have a cross-tab of Vendor × Region sales!</p>
+<p><strong>Step 6 — Add Conditional Formatting</strong>
+1. Select the Sales Amount column in Vendor_Summary
+2. Home → Conditional Formatting → Data Bars → Blue
+3. Now bars inside cells visually show relative sales size</p>
+<p><strong>Key Excel Formulas Used:</strong>
+<pre><code class="lang-">Profit Margin %  = =C3/B3          (formatted as %)
+Avg Sales/Order  = =B3/D3          (formatted as currency)
+Sales Share %    = =B3/B13         (formatted as %)  
+MoM Change       = =(B4-B3)/B3     (formatted as %)
+Column Totals    = =SUM(B3:B12)
+</code></pre></p>
+<hr>
+<h2>8. POWER BI DASHBOARD — COMPLETE GUIDE</h2>
+<h3>Step 1: Import the Data</h3>
+1. Open Power BI Desktop (free download from microsoft.com/powerbi)
+2. Click <strong>Get Data</strong> → <strong>Text/CSV</strong>
+3. Browse and select <code>vendor_sales_data.csv</code>
+4. Click <strong>Transform Data</strong> to open Power Query Editor
+<h3>Step 2: Clean Data in Power Query</h3>
+1. In Power Query, click <code>Discount</code> column → <strong>Replace Values</strong> → Replace <code>null</code> with <code>0.18</code> (median)
+2. Click <code>Profit</code> column → <strong>Replace Values</strong> → Replace <code>null</code> with <code>0</code> (handle separately with DAX)
+3. Ensure <code>Order_Date</code> column type is set to <strong>Date</strong>
+4. Click <strong>Close & Apply</strong>
+<h3>Step 3: Create DAX Measures (Calculated Metrics)</h3>
+Click the table in the left pane → <strong>New Measure</strong> and create each:
+<pre><code class="lang-dax">Total Sales = SUM(vendor_sales[Sales_Amount])
+<p>Total Profit = SUM(vendor_sales[Profit])</p>
+<p>Profit Margin % = 
+    DIVIDE([Total Profit], [Total Sales], 0) * 100</p>
+<p>Total Orders = COUNTROWS(vendor_sales)</p>
+<p>Avg Discount % = 
+    AVERAGE(vendor_sales[Discount]) * 100</p>
+<p>Top Vendor = 
+    TOPN(1, VALUES(vendor_sales[Vendor_Name]), 
+         [Total Sales], DESC)</p>
+<p>YoY Growth % = 
+    VAR current_year = CALCULATE([Total Sales], 
+                        YEAR(vendor_sales[Order_Date]) = 2024)
+    VAR prev_year    = CALCULATE([Total Sales], 
+                        YEAR(vendor_sales[Order_Date]) = 2023)
+    RETURN DIVIDE(current_year - prev_year, prev_year, 0) * 100
+</code></pre></p>
+<h3>Step 4: Build the Dashboard Layout</h3>
+<p><strong>Page 1 — Executive Summary</strong></p>
+<table border="1" style="border-collapse:collapse;width:100%"><tr><th style="padding:6px 10px">Visual</th><th style="padding:6px 10px">How to Create</th><th style="padding:6px 10px">Fields</th></tr><tr><td style="padding:6px 10px">KPI Card: Total Sales</td><td style="padding:6px 10px">Insert → Card</td><td style="padding:6px 10px">Total Sales measure</td></tr><tr><td style="padding:6px 10px">KPI Card: Total Profit</td><td style="padding:6px 10px">Insert → Card</td><td style="padding:6px 10px">Total Profit measure</td></tr><tr><td style="padding:6px 10px">KPI Card: Total Orders</td><td style="padding:6px 10px">Insert → Card</td><td style="padding:6px 10px">Total Orders measure</td></tr><tr><td style="padding:6px 10px">KPI Card: Profit Margin</td><td style="padding:6px 10px">Insert → Card</td><td style="padding:6px 10px">Profit Margin % measure</td></tr><tr><td style="padding:6px 10px">Vendor Bar Chart</td><td style="padding:6px 10px">Insert → Clustered Bar</td><td style="padding:6px 10px">Axis: Vendor_Name, Values: Total Sales</td></tr><tr><td style="padding:6px 10px">Region Pie Chart</td><td style="padding:6px 10px">Insert → Pie Chart</td><td style="padding:6px 10px">Legend: Region, Values: Total Sales</td></tr><tr><td style="padding:6px 10px">Monthly Line Chart</td><td style="padding:6px 10px">Insert → Line Chart</td><td style="padding:6px 10px">Axis: Order_Date (Month), Values: Total Sales</td></tr><tr><td style="padding:6px 10px">Category Bar</td><td style="padding:6px 10px">Insert → Clustered Bar</td><td style="padding:6px 10px">Axis: Product_Category, Values: Total Profit</td></tr></table>
+<strong>Page 2 — Deep Dive Analysis</strong>
+- Scatter Chart: Sales_Amount vs Profit (size = Quantity, color = Region)
+- Matrix Table: Vendor_Name × Region → Total Sales
+- Gauge Chart: Profit Margin % vs target (25%)
+- Waterfall Chart: Monthly profit growth
+<h3>Step 5: Add Slicers (Interactive Filters)</h3>
+1. Insert → Slicer → Field: <strong>Region</strong>
+2. Insert → Slicer → Field: <strong>Year</strong> (from Order_Date)
+3. Insert → Slicer → Field: <strong>Product_Category</strong>
+4. Insert → Slicer → Field: <strong>Vendor_Name</strong>
+<p>Format slicers: Selection Controls → "Single Select" or "Multi Select"</p>
+<h3>Step 6: Professional Formatting</h3>
+- <strong>Theme:</strong> View → Themes → Executive (or customize with hex colors)
+- <strong>Background:</strong> Format page → Canvas background → Dark blue (#0D47A1) or White
+- <strong>Fonts:</strong> Segoe UI for all text
+- <strong>Card formatting:</strong> Bold value, smaller title, border with rounded corners
+- <strong>Add company logo placeholder</strong> in top-left corner
+<h3>Step 7: Add Tooltips</h3>
+- On any chart → Format → Tooltip → Turn On
+- Add relevant measures to show on hover (e.g., hover a region to see top vendor in that region)
+<h3>Power BI Dashboard Layout (Wireframe):</h3>
+<pre><code class="lang-">┌─────────────────────────────────────────────────────────┐
+│  📊 VENDOR SALES PERFORMANCE DASHBOARD    [Slicers →]   │
+├──────────┬──────────┬──────────┬──────────┬─────────────┤
+│ 💰 Total │ 📈 Total │ 📦 Orders│ 🏷️ Disc  │ 📊 Margin   │
+│  Sales   │  Profit  │  Count   │   Avg    │    %        │
+├──────────┴──────────┴──────────┴──────────┴─────────────┤
+│                                     │                    │
+│   Vendor Sales Bar Chart (Top 10)   │  Region Pie Chart  │
+│                                     │                    │
+├─────────────────────────────────────┤                    │
+│                                     │                    │
+│   Monthly Sales Trend Line Chart    │  Category Bar      │
+│                                     │                    │
+└─────────────────────────────────────┴────────────────────┘
+</code></pre>
+<hr>
+<h2>9. BUSINESS INSIGHTS (10 Key Findings)</h2>
+<p><strong>Insight 1 — TechSupply Co. Dominates Revenue</strong>
+TechSupply Co. generates ₹2.76 crore in sales, representing ~22.6% of total company revenue. This single-vendor dependency is a business risk — if this vendor raises prices or exits, revenue drops significantly.</p>
+<p><strong>Insight 2 — Top 3 Vendors Drive 49% of Revenue</strong>
+TechSupply Co., EagleSource, and GlobalMart Inc. together account for nearly half of all sales. The company should prioritize relationship management and contract renewals with these three vendors.</p>
+<p><strong>Insight 3 — Profit Margins Vary Significantly Across Vendors</strong>
+Profit margins range from ~22% to ~28% across vendors. RedRock Traders and SilverLine Corp., despite lower sales volumes, show competitive margins — suggesting they could be grown strategically.</p>
+<p><strong>Insight 4 — Average Discount is 17.7% — May Be Hurting Profitability</strong>
+The average discount given is 17.7%, which is high. A negative correlation exists between discount rate and profit margin. Reducing discounts by even 2–3% could add lakhs to overall profit.</p>
+<p><strong>Insight 5 — No Single Dominant Region</strong>
+Sales are relatively balanced across all 5 regions (each ~18–22%), suggesting the company has good geographic diversification. However, the Central region consistently shows the lowest order count.</p>
+<p><strong>Insight 6 — Electronics and Home Appliances Lead in Sales</strong>
+Electronics and Home Appliances categories together contribute the largest share of revenue. These high-value items drive top-line growth but may also carry the highest procurement costs.</p>
+<p><strong>Insight 7 — Seasonal Patterns Visible in Monthly Trends</strong>
+Sales show cyclical fluctuations throughout the year. Certain months (typically Q4: Oct–Dec) show elevated sales, consistent with festive season buying patterns in Indian retail markets.</p>
+<p><strong>Insight 8 — 2024 Shows Growth Over 2023</strong>
+Year-over-year comparison of monthly sales shows that 2024 generally outperforms 2023, indicating positive business growth. The company should analyze what drove this growth to replicate it.</p>
+<p><strong>Insight 9 — RedRock Traders Has Fewest Orders (19) But Decent Margin</strong>
+RedRock Traders has the least order count but a healthy profit margin. This vendor may be underutilized — increasing order frequency could boost overall profitability without increasing the vendor base.</p>
+<p><strong>Insight 10 — High-Discount Orders Cluster in Clothing and Toys</strong>
+The Region × Category heatmap and scatter analysis reveal that Clothing and Toys categories receive above-average discounts. Management should investigate whether these discounts are market-driven or negotiable.</p>
+<hr>
+<h2>10. CONCLUSION</h2>
+<p>This project successfully built a complete <strong>Vendor Sales Performance Dashboard</strong> covering the full analytics pipeline. Starting from a realistic dataset of 550 transactions, we performed data cleaning and exploratory analysis in Python, wrote structured queries in SQL to answer key business questions, created interactive pivot tables and charts in Excel, and designed an executive-level dashboard in Power BI.</p>
+<p>Key findings show that <strong>TechSupply Co.</strong> is the dominant vendor, the company has healthy <strong>geographic diversification</strong>, and there is a clear opportunity to <strong>improve profitability by reducing average discounts</strong>. The year-over-year analysis confirms <strong>business growth from 2023 to 2024</strong>.</p>
+<p>This project demonstrates skills that are directly applicable in data analyst, business analyst, and BI developer roles. The tools used — Python, SQL, Excel, and Power BI — are the four most in-demand skills for entry-level data jobs according to industry job postings. This project is ready for college submission as a final year project and serves as a strong portfolio piece for internship and job applications.</p>
+<hr>
+<h2>11. METHODOLOGY</h2>
+<p>The project followed the <strong>CRISP-DM</strong> (Cross-Industry Standard Process for Data Mining) framework:</p>
+<p><strong>Phase 1 — Business Understanding</strong>
+Defined the business problem: a trading company needs visibility into vendor sales performance. Identified 5 key questions (who sells most, where, what category, when, and how profitable).</p>
+<p><strong>Phase 2 — Data Understanding</strong>
+Created a synthetic but realistic dataset with 550 rows, 10 vendors, 5 regions, 8 categories, spanning 2 years. Introduced 3% missing values to simulate real-world data quality issues.</p>
+<p><strong>Phase 3 — Data Preparation (Python)</strong>
+- Loaded CSV with pandas
+- Identified and handled missing values (median imputation for Discount, margin-based imputation for Profit)
+- Engineered new features: Month, Year, Quarter, Profit_Margin
+- Verified data types and removed any duplicates</p>
+<p><strong>Phase 4 — Modeling/Analysis (SQL + Python)</strong>
+- SQL queries for structured aggregations (vendor totals, regional breakdown, monthly trend)
+- Python EDA with 12 visualizations across 3 figure panels
+- Statistical analysis: correlation between discount and profit, YoY comparison, heatmaps</p>
+<p><strong>Phase 5 — Evaluation (Excel)</strong>
+- Built interactive pivot tables for ad-hoc analysis
+- Created 4 chart types (bar, line, pie, grouped bar) with live formulas
+- Verified all KPI calculations with SUM/AVERAGE/DIVIDE formulas</p>
+<p><strong>Phase 6 — Deployment (Power BI)</strong>
+- Imported cleaned data
+- Created DAX measures for dynamic KPIs
+- Designed 2-page interactive dashboard with 4 slicers
+- Published for stakeholder use</p>
+<hr>
+<h2>12. TOOLS USED</h2>
+<table border="1" style="border-collapse:collapse;width:100%"><tr><th style="padding:6px 10px">Tool</th><th style="padding:6px 10px">Version</th><th style="padding:6px 10px">Purpose</th></tr><tr><td style="padding:6px 10px">Python</td><td style="padding:6px 10px">3.10+</td><td style="padding:6px 10px">Data cleaning, EDA, visualization</td></tr><tr><td style="padding:6px 10px">pandas</td><td style="padding:6px 10px">2.0+</td><td style="padding:6px 10px">Data manipulation and aggregation</td></tr><tr><td style="padding:6px 10px">NumPy</td><td style="padding:6px 10px">1.24+</td><td style="padding:6px 10px">Numerical operations</td></tr><tr><td style="padding:6px 10px">Matplotlib</td><td style="padding:6px 10px">3.7+</td><td style="padding:6px 10px">Chart creation</td></tr><tr><td style="padding:6px 10px">Seaborn</td><td style="padding:6px 10px">0.12+</td><td style="padding:6px 10px">Statistical visualizations</td></tr><tr><td style="padding:6px 10px">Microsoft Excel</td><td style="padding:6px 10px">2019/365</td><td style="padding:6px 10px">Pivot tables, charts, KPI dashboard</td></tr><tr><td style="padding:6px 10px">SQL</td><td style="padding:6px 10px">Standard SQL</td><td style="padding:6px 10px">Data querying and aggregation</td></tr><tr><td style="padding:6px 10px">Power BI Desktop</td><td style="padding:6px 10px">Latest</td><td style="padding:6px 10px">Interactive executive dashboard</td></tr></table>
+<strong>Install Python libraries:</strong>
+<pre><code class="lang-bash">pip install pandas numpy matplotlib seaborn openpyxl
+</code></pre>
+<hr>
+<h2>13. FUTURE SCOPE</h2>
+<p><strong>1. Real-time Data Integration</strong>
+Connect the Power BI dashboard to a live SQL database so it refreshes automatically every hour, giving management real-time sales visibility.</p>
+<p><strong>2. Predictive Analytics</strong>
+Use Python's <code>scikit-learn</code> library to build a sales forecasting model (e.g., Linear Regression or ARIMA) that predicts next quarter's revenue for each vendor.</p>
+<p><strong>3. Vendor Scorecard System</strong>
+Build a weighted scoring algorithm that ranks vendors on multiple dimensions: on-time delivery, discount rate, return rate, and profit margin — generating an automatic monthly vendor health score.</p>
+<p><strong>4. Anomaly Detection</strong>
+Implement statistical anomaly detection (Z-score or IQR method) to automatically flag unusual orders — for example, an order with a 35% discount when the average is 18%.</p>
+<p><strong>5. Customer Segmentation</strong>
+If customer data is added, apply clustering algorithms (K-Means) to segment customers by buying behavior and map which vendors serve which customer segments.</p>
+<p><strong>6. Mobile Dashboard</strong>
+Publish the Power BI dashboard to the Power BI mobile app so managers can view sales KPIs on their phones in real time.</p>
+<p><strong>7. Automated Reporting</strong>
+Use Python's <code>smtplib</code> and <code>schedule</code> libraries to automatically email a PDF sales summary report to management every Monday morning.</p>
+<hr>
+<h2>14. VIVA QUESTIONS AND ANSWERS</h2>
+<h3>Section A: Project-Level Questions</h3>
+<p><strong>Q1. What is the objective of your project?</strong>
+A: The objective is to analyze vendor sales performance data across 10 vendors, 5 regions, and 8 product categories over 2 years. The goal is to build interactive dashboards in Excel and Power BI that help management make data-driven decisions about vendor relationships, regional strategy, and product category focus.</p>
+<p><strong>Q2. Why did you choose this topic?</strong>
+A: Vendor management is a critical function in any trading or retail business. According to industry surveys, companies that analyze vendor performance data experience 15–20% better cost savings in procurement. This topic is directly relevant to Business Intelligence roles, which are among the highest-demand data jobs today.</p>
+<p><strong>Q3. How many rows does your dataset have, and how was it created?</strong>
+A: The dataset has 550 rows and 11 columns. It was created using Python's <code>random</code> and <code>numpy</code> libraries to simulate realistic vendor transactions. We introduced intentional data quality issues (about 3% missing values in Discount and Profit columns) to make the cleaning exercise realistic. Vendor weights were set so TechSupply Co. gets ~18% of orders (realistic market leader scenario).</p>
+<p><strong>Q4. What data quality issues did you find and how did you handle them?</strong>
+A: We found 18 missing values in the Discount column and 17 in the Profit column. For Discount, we filled missing values with the <strong>median</strong> (not mean) because the median is more robust to extreme values. For Profit, we calculated the median profit margin across all orders and multiplied it by the corresponding Sales_Amount — this preserves the proportional relationship between sales and profit.</p>
+<p><strong>Q5. What is CRISP-DM and did you follow it?</strong>
+A: CRISP-DM stands for Cross-Industry Standard Process for Data Mining. It has 6 phases: Business Understanding, Data Understanding, Data Preparation, Modeling, Evaluation, and Deployment. Yes, our project follows this framework — we started by defining the business problem, explored the data, cleaned it in Python, analyzed it with SQL, evaluated results in Excel, and deployed the final dashboard in Power BI.</p>
+<hr>
+<h3>Section B: SQL Questions</h3>
+<p><strong>Q6. What is the difference between WHERE and HAVING in SQL?</strong>
+A: <code>WHERE</code> filters rows <strong>before</strong> grouping. <code>HAVING</code> filters groups <strong>after</strong> <code>GROUP BY</code> has been applied. For example: <code>WHERE Sales_Amount > 10000</code> filters individual rows. <code>HAVING SUM(Sales_Amount) > 100000</code> filters vendor groups based on their total sales.</p>
+<p><strong>Q7. How would you find vendors whose total sales are above the average?</strong>
+A:
+<pre><code class="lang-sql">SELECT Vendor_Name, SUM(Sales_Amount) AS Total_Sales
+FROM vendor_sales
+GROUP BY Vendor_Name
+HAVING SUM(Sales_Amount) > (SELECT AVG(Total) FROM 
+    (SELECT SUM(Sales_Amount) AS Total 
+     FROM vendor_sales GROUP BY Vendor_Name) sub)
+ORDER BY Total_Sales DESC;
+</code></pre></p>
+<p><strong>Q8. What is the difference between GROUP BY and ORDER BY?</strong>
+A: <code>GROUP BY</code> <strong>collapses</strong> multiple rows with the same value into one group (used with aggregate functions like SUM, COUNT). <code>ORDER BY</code> <strong>sorts</strong> the result set by a column in ascending or descending order. They are often used together: GROUP BY first aggregates, then ORDER BY sorts the aggregated results.</p>
+<hr>
+<h3>Section C: Python Questions</h3>
+<p><strong>Q9. Why did you use median imputation instead of mean for missing Discount values?</strong>
+A: The Discount column contains values between 0% and 35%, which can have a few extreme values at the boundaries. The median is the "middle value" and is not affected by these extremes, making it a more reliable representative of the typical discount rate. If we had used the mean, one or two unusual discounts could pull the imputed value too high or too low.</p>
+<p><strong>Q10. What is the difference between <code>df.fillna()</code> and <code>df.dropna()</code>?</strong>
+A: <code>df.fillna(value)</code> replaces missing values with a specified value (like median, mean, or 0) — it <strong>keeps</strong> all rows. <code>df.dropna()</code> <strong>removes</strong> any row that has at least one missing value. For this project, we used <code>fillna()</code> because dropping rows would reduce our dataset size (we only had 550 rows) and potentially introduce bias if missing values were not random.</p>
+<p><strong>Q11. What visualizations did you create and why?</strong>
+A: We created 12 visualizations across 3 figure panels:
+- <strong>Bar charts:</strong> To compare vendors and categories (good for ranking)
+- <strong>Pie/Donut charts:</strong> To show proportional share of regions
+- <strong>Line charts:</strong> To show trends over time (monthly and yearly)
+- <strong>Scatter plot:</strong> To show relationship between Sales, Profit, and Discount
+- <strong>Heatmap:</strong> To visualize the Region × Category matrix (two categorical variables)
+- <strong>Grouped bar:</strong> To compare Sales vs Profit side-by-side for each category</p>
+<p>Each chart type was chosen based on the type of comparison being made (ranking, proportion, trend, relationship, or distribution).</p>
+<hr>
+<h3>Section D: Excel Questions</h3>
+<p><strong>Q12. What is a Pivot Table and how did you use it?</strong>
+A: A Pivot Table is an Excel tool that automatically summarizes large datasets. You drag fields to "Rows", "Columns", and "Values" areas, and Excel instantly calculates aggregations like SUM, COUNT, or AVERAGE. In our project, we used Pivot Tables to summarize total sales by vendor, profit by region, and orders by month — the same analysis that required 10+ lines of Python code is done in seconds with a Pivot Table.</p>
+<p><strong>Q13. What Excel formula did you use to calculate profit margin, and why not hardcode it?</strong>
+A: We used <code>=C3/B3</code> (where C3 is Profit and B3 is Total Sales), formatted as percentage. We used formulas instead of hardcoded values because Excel formulas are dynamic — if the underlying sales data changes, the profit margin automatically recalculates. Hardcoded values would need manual updating and could become incorrect. This is a core principle of spreadsheet best practice.</p>
+<hr>
+<h3>Section E: Power BI Questions</h3>
+<p><strong>Q14. What is a DAX measure and how is it different from a calculated column?</strong>
+A: A <strong>DAX Measure</strong> is a formula that calculates values dynamically based on the current filter context (e.g., what slicer is selected). A <strong>Calculated Column</strong> adds a new column to the data table, calculated row by row at data load time. Measures are more memory-efficient and respond to slicers, making them preferred for dashboard KPIs like Total Sales or Profit Margin %.</p>
+<p><strong>Q15. What are slicers in Power BI and why are they important?</strong>
+A: Slicers are interactive filter controls — they appear as buttons, dropdowns, or checkboxes on the dashboard. When a user clicks "North" on a Region slicer, all visuals on the page automatically filter to show only North region data. Slicers transform a static report into an interactive tool, allowing business users to explore the data themselves without needing SQL or Python skills.</p>
+<p><strong>Q16. What is the DIVIDE function in DAX and why is it used instead of the division operator (/)?</strong>
+A: <code>DIVIDE(numerator, denominator, alternate_result)</code> safely handles division-by-zero errors by returning the <code>alternate_result</code> (usually 0 or BLANK()) instead of an error. The regular <code>/</code> operator would throw an error if the denominator is zero, which would break the entire visual. For example: <code>DIVIDE([Total Profit], [Total Sales], 0)</code> returns 0 if Total Sales is zero instead of crashing.</p>
+<hr>
+<h3>Section F: General Data Analytics Questions</h3>
+<p><strong>Q17. What is the difference between descriptive, diagnostic, predictive, and prescriptive analytics?</strong>
+A:
+- <strong>Descriptive:</strong> What happened? (Our sales trend charts, total sales KPIs)
+- <strong>Diagnostic:</strong> Why did it happen? (Scatter plots showing discount vs profit relationship)
+- <strong>Predictive:</strong> What will happen? (Future scope — forecasting next quarter's sales)
+- <strong>Prescriptive:</strong> What should we do? (Insights section — "reduce discounts in Clothing category")</p>
+<p>Our project covers the first two levels. Adding a machine learning model would add the predictive level.</p>
+<p><strong>Q18. If a vendor has high sales but low profit margin, what would you recommend?</strong>
+A: This is a common business scenario. I would investigate: (1) Is the vendor giving unusually high discounts? Our data shows a negative correlation between discount rate and profit margin. (2) Are the products in a highly competitive category forcing lower prices? (3) Are there hidden procurement costs? I would recommend renegotiating the discount structure with that vendor and potentially shifting more orders to vendors with better margins.</p>
+<p><strong>Q19. How would you present this project to a non-technical business manager?</strong>
+A: I would skip the technical details and lead with business value: "Our dashboard shows that your top 3 vendors generate 49% of all revenue. The average discount you're giving is 17.7% — if we reduce it by just 2%, that's potentially ₹24 lakhs more profit per year. Also, your Central region is underperforming — it has fewer orders than other regions despite similar population. I'd recommend a targeted sales push there." Business managers care about money and decisions, not Python code.</p>
+<p><strong>Q20. What would you do differently if you had more time or resources?</strong>
+A: I would: (1) Connect to a live database instead of a CSV file so the dashboard updates in real time. (2) Add a machine learning forecasting model to predict next month's sales for each vendor. (3) Build a vendor health scorecard that rates vendors on 5–6 dimensions (not just sales) and generates an automated alert email if any vendor's score drops below a threshold. (4) Conduct proper A/B testing to see if reducing discounts actually improves profit or if it reduces order volume.</p>
+<hr>
+*End of Documentation*
+<hr>
+<strong>Project by:</strong> [Your Name] | <strong>Roll No:</strong> [Your Roll No] | <strong>Institution:</strong> [Your College Name]
+<strong>Tools:</strong> Python 3.10 | SQL | Microsoft Excel | Power BI Desktop
+<strong>Dataset:</strong> 550 rows | 10 Vendors | 5 Regions | 8 Categories | 2023–2024
+</body>
+</html>
